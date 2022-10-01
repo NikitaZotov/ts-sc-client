@@ -1,4 +1,4 @@
-import { invalidValue } from "./errors";
+import {invalidValue, serverError} from "./errors";
 import { ScAddr } from "./ScAddr";
 import { ScConstruction } from "./ScConstruction";
 import { ScEvent } from "./ScEvent";
@@ -15,6 +15,12 @@ export interface Response<T = any> {
   status: boolean;
   event: boolean;
   payload: T;
+  errors: string | Error[];
+}
+
+export interface Error {
+  ref: number;
+  message: string;
 }
 
 export interface Request<T = any> {
@@ -65,6 +71,21 @@ export class ScClient {
     const data = JSON.parse(messageEvent.data.toString()) as Response;
     const cmdID = data.id;
     const callback = this._callbacks[cmdID];
+
+    if (data.errors.length) {
+      let errorMessage = "";
+
+      if (typeof data.errors === 'string') {
+        errorMessage = data.errors;
+      }
+      else {
+        data.errors.forEach((error) => {
+          errorMessage.concat(error.message);
+        });
+      }
+
+      throw serverError(errorMessage);
+    }
 
     if (data.event) {
       const evt = this._events[cmdID];
