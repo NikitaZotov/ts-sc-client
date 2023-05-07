@@ -31,6 +31,33 @@ export interface ISCs {
   output_structure: ScAddr;
 }
 
+export interface ISCsASTNodePosition {
+  beginLine: number;
+  beginIndex: number;
+  endLine?: number;
+  endIndex?: number;
+}
+
+export interface ISCsASTNode {
+  position: ISCsASTNodePosition;
+  ruleType: string;
+  token?: string;
+  children: Array<ISCsASTNode>;
+}
+
+export interface ISCsASTNodeError {
+  token: string;
+  position: ISCsASTNodePosition;
+  line: number;
+  charPositionInLine: number;
+  msg: string;
+}
+
+export interface ISCsAST {
+  root: ISCsASTNode;
+  errors: ISCsASTNodeError[];
+}
+
 interface IGenerateElementsBySCsArgs {
   scs: string;
   output_structure: number;
@@ -157,6 +184,7 @@ export type TAction =
   | "connection_info"
   | "create_elements"
   | "create_elements_by_scs"
+  | "parse_scs"
   | "check_elements"
   | "delete_elements"
   | "search_template"
@@ -207,6 +235,11 @@ export type TGenerateElementsBySCsArgs = Args<
   "create_elements_by_scs",
   Array<IGenerateElementsBySCsArgs>,
   boolean[]
+>;
+export type TParseSCsArgs = Args<
+  "parse_scs",
+  Array<string>,
+  Array<ISCsAST>
 >;
 export type TSetContentArgs = Args<
   "content",

@@ -12,6 +12,7 @@ import {
   IConnector,
   ILink,
   INode,
+  ISCsAST,
   TGetElementsTypesArgs,
   TGetContentArgs,
   TSetContentArgs,
@@ -19,6 +20,7 @@ import {
   TSearchLinkContentsArgs,
   TGenerateElementsArgs,
   TGenerateElementsBySCsArgs,
+  TParseSCsArgs,
   TEraseElementsArgs,
   TWSCallback,
   TAction,
@@ -133,6 +135,7 @@ export class ScClient {
   private sendMessage(...args: TEraseElementsArgs): void;
   private sendMessage(...args: TGenerateElementsArgs): void;
   private sendMessage(...args: TGenerateElementsBySCsArgs): void;
+  private sendMessage(...args: TParseSCsArgs): void;
   private sendMessage(...args: TGetElementsTypesArgs): void;
   private sendMessage(...args: TGetContentArgs): void;
   private sendMessage(...args: TSetContentArgs): void;
@@ -291,6 +294,15 @@ export class ScClient {
   public async createElementsBySCs(scsText: string[] | ISCs[]) {
     console.warn("Warning: ScClient `createElementsBySCs` method is deprecated. Use `generateElementsBySCs` instead.");
     return this.generateElementsBySCs(scsText);
+  }
+
+
+  public async parseSCs(scsText: string[]) {
+    return new Promise<ISCsAST[]>((resolve, reject) => {
+      this.sendMessage("parse_scs", scsText, ({ payload, errors }) => {
+        this.resolveOrReject(resolve, reject, payload, errors);
+      });
+    });
   }
 
   public async eraseElements(addrs: ScAddr[]) {
