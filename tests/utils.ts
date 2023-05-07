@@ -10,6 +10,151 @@ const getMockAnswerPayload = (data: Request) => {
   if (data.type === "create_elements_by_scs") {
     return data.payload.map((_: any, ind: boolean) => ind);
   }
+  if (data.type === "parse_scs") {
+    return [
+        {
+            "errors": [],
+            "root": {
+                "children": [
+                    {
+                        "children": [
+                            {
+                                "children": [
+                                    {
+                                        "children": [
+                                            {
+                                                "children": [
+                                                    {
+                                                        "children": [],
+                                                        "position": {
+                                                            "beginIndex": 5,
+                                                            "beginLine": 1,
+                                                            "endIndex": 6,
+                                                            "endLine": 1
+                                                        },
+                                                        "ruleType": "connector",
+                                                        "token": "->"
+                                                    },
+                                                    {
+                                                        "children": [
+                                                            {
+                                                                "children": [
+                                                                    {
+                                                                        "children": [
+                                                                            {
+                                                                                "children": [],
+                                                                                "position": {
+                                                                                    "beginIndex": 8,
+                                                                                    "beginLine": 1,
+                                                                                    "endIndex": 11,
+                                                                                    "endLine": 1
+                                                                                },
+                                                                                "ruleType": "idtf_system",
+                                                                                "token": "y536"
+                                                                            }
+                                                                        ],
+                                                                        "position": {
+                                                                            "beginIndex": 8,
+                                                                            "beginLine": 1,
+                                                                            "endIndex": 11,
+                                                                            "endLine": 1
+                                                                        },
+                                                                        "ruleType": "idtf_atomic"
+                                                                    }
+                                                                ],
+                                                                "position": {
+                                                                    "beginIndex": 8,
+                                                                    "beginLine": 1,
+                                                                    "endIndex": 11,
+                                                                    "endLine": 1
+                                                                },
+                                                                "ruleType": "idtf_common"
+                                                            }
+                                                        ],
+                                                        "position": {
+                                                            "beginIndex": 8,
+                                                            "beginLine": 1,
+                                                            "endIndex": 11,
+                                                            "endLine": 1
+                                                        },
+                                                        "ruleType": "idtf_list"
+                                                    }
+                                                ],
+                                                "position": {
+                                                    "beginIndex": 5,
+                                                    "beginLine": 1,
+                                                    "endIndex": 11,
+                                                    "endLine": 1
+                                                },
+                                                "ruleType": "sentence_lvl_4_list_item"
+                                            },
+                                            {
+                                                "children": [
+                                                    {
+                                                        "children": [
+                                                            {
+                                                                "children": [],
+                                                                "position": {
+                                                                    "beginIndex": 0,
+                                                                    "beginLine": 1,
+                                                                    "endIndex": 3,
+                                                                    "endLine": 1
+                                                                },
+                                                                "ruleType": "idtf_system",
+                                                                "token": "x123"
+                                                            }
+                                                        ],
+                                                        "position": {
+                                                            "beginIndex": 0,
+                                                            "beginLine": 1,
+                                                            "endIndex": 3,
+                                                            "endLine": 1
+                                                        },
+                                                        "ruleType": "idtf_atomic"
+                                                    }
+                                                ],
+                                                "position": {
+                                                    "beginIndex": 0,
+                                                    "beginLine": 1,
+                                                    "endIndex": 3,
+                                                    "endLine": 1
+                                                },
+                                                "ruleType": "idtf_common"
+                                            }
+                                        ],
+                                        "position": {
+                                            "beginIndex": 0,
+                                            "beginLine": 1,
+                                            "endIndex": 11,
+                                            "endLine": 1
+                                        },
+                                        "ruleType": "sentence_lvl_common"
+                                    }
+                                ],
+                                "position": {
+                                    "beginIndex": 0,
+                                    "beginLine": 1,
+                                    "endIndex": 11,
+                                    "endLine": 1
+                                },
+                                "ruleType": "sentence"
+                            }
+                        ],
+                        "position": {
+                            "beginIndex": 0,
+                            "beginLine": 1,
+                            "endIndex": 13,
+                            "endLine": 1
+                        },
+                        "ruleType": "sentence_wrap",
+                        "token": ";;"
+                    }
+                ],
+                "ruleType": "syntax"
+            }
+        }
+    ];
+  }
   if (data.type === "check_elements") {
     return data.payload.map((_: any, ind: number) => ind);
   }

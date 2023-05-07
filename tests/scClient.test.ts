@@ -193,6 +193,161 @@ describe("ScClient", () => {
     );
   });
 
+  test("parseSCs", async () => {
+    const res = await client.parseSCs(["x123 -> y536;;"]);
+
+    expect(res).toHaveLength(1);
+
+    await expect(server).toReceiveMessage(
+        expect.objectContaining({
+          type: "parse_scs",
+          payload: expect.arrayContaining([
+            {
+              "errors": [],
+              "root": {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "children": [
+                                  {
+                                    "children": [],
+                                    "position": {
+                                      "beginIndex": 5,
+                                      "beginLine": 1,
+                                      "endIndex": 6,
+                                      "endLine": 1
+                                    },
+                                    "ruleType": "connector",
+                                    "token": "->"
+                                  },
+                                  {
+                                    "children": [
+                                      {
+                                        "children": [
+                                          {
+                                            "children": [
+                                              {
+                                                "children": [],
+                                                "position": {
+                                                  "beginIndex": 8,
+                                                  "beginLine": 1,
+                                                  "endIndex": 11,
+                                                  "endLine": 1
+                                                },
+                                                "ruleType": "idtf_system",
+                                                "token": "y536"
+                                              }
+                                            ],
+                                            "position": {
+                                              "beginIndex": 8,
+                                              "beginLine": 1,
+                                              "endIndex": 11,
+                                              "endLine": 1
+                                            },
+                                            "ruleType": "idtf_atomic"
+                                          }
+                                        ],
+                                        "position": {
+                                          "beginIndex": 8,
+                                          "beginLine": 1,
+                                          "endIndex": 11,
+                                          "endLine": 1
+                                        },
+                                        "ruleType": "idtf_common"
+                                      }
+                                    ],
+                                    "position": {
+                                      "beginIndex": 8,
+                                      "beginLine": 1,
+                                      "endIndex": 11,
+                                      "endLine": 1
+                                    },
+                                    "ruleType": "idtf_list"
+                                  }
+                                ],
+                                "position": {
+                                  "beginIndex": 5,
+                                  "beginLine": 1,
+                                  "endIndex": 11,
+                                  "endLine": 1
+                                },
+                                "ruleType": "sentence_lvl_4_list_item"
+                              },
+                              {
+                                "children": [
+                                  {
+                                    "children": [
+                                      {
+                                        "children": [],
+                                        "position": {
+                                          "beginIndex": 0,
+                                          "beginLine": 1,
+                                          "endIndex": 3,
+                                          "endLine": 1
+                                        },
+                                        "ruleType": "idtf_system",
+                                        "token": "x123"
+                                      }
+                                    ],
+                                    "position": {
+                                      "beginIndex": 0,
+                                      "beginLine": 1,
+                                      "endIndex": 3,
+                                      "endLine": 1
+                                    },
+                                    "ruleType": "idtf_atomic"
+                                  }
+                                ],
+                                "position": {
+                                  "beginIndex": 0,
+                                  "beginLine": 1,
+                                  "endIndex": 3,
+                                  "endLine": 1
+                                },
+                                "ruleType": "idtf_common"
+                              }
+                            ],
+                            "position": {
+                              "beginIndex": 0,
+                              "beginLine": 1,
+                              "endIndex": 11,
+                              "endLine": 1
+                            },
+                            "ruleType": "sentence_lvl_common"
+                          }
+                        ],
+                        "position": {
+                          "beginIndex": 0,
+                          "beginLine": 1,
+                          "endIndex": 11,
+                          "endLine": 1
+                        },
+                        "ruleType": "sentence"
+                      }
+                    ],
+                    "position": {
+                      "beginIndex": 0,
+                      "beginLine": 1,
+                      "endIndex": 13,
+                      "endLine": 1
+                    },
+                    "ruleType": "sentence_wrap",
+                    "token": ";;"
+                  }
+                ],
+                "ruleType": "syntax"
+              }
+            }
+          ]),
+        })
+    );
+  });
+
   test("deleteElements", async () => {
     const construction = new ScConstruction();
     construction.createNode(ScType.NodeConst)

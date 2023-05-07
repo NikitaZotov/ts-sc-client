@@ -7,7 +7,30 @@ import { ScLinkContent, TContentString } from "./ScLinkContent";
 import { ScTemplate, ScTemplateValue } from "./ScTemplate";
 import { ScTemplateResult } from "./ScTemplateResult";
 import { ScType } from "./ScType";
-import { ScError, IEdge, ILink, INode, TCheckElementsArgs, TGetContentArgs, TSetContentArgs, TGetLinksArgs, TGetStringsArgs, TCreateElementsArgs, TCreateElementsBySCsArgs, TDeleteElementsArgs, TWSCallback, TAction, TKeynodesElementsArgs, TTemplateSearchArgs, TTripleItem, TTemplateGenerateArgs, TCreateEventArgs, TDeleteEventArgs, ISCs } from "./types";
+import {
+  ScError,
+  IEdge,
+  ILink,
+  INode,
+  TCheckElementsArgs,
+  TGetContentArgs,
+  TSetContentArgs,
+  TGetLinksArgs,
+  TGetStringsArgs,
+  TCreateElementsArgs,
+  TCreateElementsBySCsArgs,
+  TDeleteElementsArgs,
+  TWSCallback,
+  TAction,
+  TKeynodesElementsArgs,
+  TTemplateSearchArgs,
+  TTripleItem,
+  TTemplateGenerateArgs,
+  TCreateEventArgs,
+  TDeleteEventArgs,
+  ISCs,
+  TParseSCsArgs, ISCsAST
+} from "./types";
 import { transformEdgeInfo } from "./utils";
 
 export interface Response<T = any> {
@@ -89,6 +112,7 @@ export class ScClient {
   private sendMessage(...args: TDeleteElementsArgs): void;
   private sendMessage(...args: TCreateElementsArgs): void;
   private sendMessage(...args: TCreateElementsBySCsArgs): void;
+  private sendMessage(...args: TParseSCsArgs): void;
   private sendMessage(...args: TCheckElementsArgs): void;
   private sendMessage(...args: TGetContentArgs): void;
   private sendMessage(...args: TSetContentArgs): void;
@@ -192,6 +216,14 @@ export class ScClient {
         return { scs: scsString.scs, output_structure: scsString.output_structure?.value}
       })
       this.sendMessage("create_elements_by_scs", payload, ({ payload, errors }) => {
+        this.resolveOrReject(resolve, reject, payload, errors);
+      });
+    });
+  }
+
+  public async parseSCs(scsText: string[]) {
+    return new Promise<ISCsAST[]>((resolve, reject) => {
+      this.sendMessage("parse_scs", scsText, ({ payload, errors }) => {
         this.resolveOrReject(resolve, reject, payload, errors);
       });
     });
