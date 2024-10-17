@@ -20,7 +20,7 @@ import {
   sc_type_node_class,
   sc_type_node_superclass,
   sc_type_node_material,
-  sc_type_node_norole,
+  sc_type_node_no_role,
   sc_type_node_role,
   sc_type_node_structure,
   sc_type_node_tuple,
@@ -54,28 +54,32 @@ export class ScType {
     return (this._value & sc_type_constancy_mask) != 0;
   }
 
+  protected hasSubtype(subtype: number): boolean {
+    return (this._value & subtype) == subtype;
+  }
+
   public isConst(): boolean {
-    return (this._value & sc_type_const) != 0;
+    return this.hasSubtype(sc_type_const);
   }
 
   public isVar(): boolean {
-    return (this._value & sc_type_var) != 0;
+    return this.hasSubtype(sc_type_var);
   }
 
   public hasDirection(): boolean {
-    return (this._value & sc_type_common_edge) == 0;
+    return this.isArc();
   }
 
   public isNode(): boolean {
-    return (this._value & sc_type_node) != 0;
+    return this.hasSubtype(sc_type_node);
   }
 
   public isLink(): boolean {
-    return (this._value & sc_type_node_link) == sc_type_node_link;
+    return this.hasSubtype(sc_type_node_link);
   }
 
   public isConnector(): boolean {
-    return (this._value & sc_type_connector) != 0;
+    return this.hasSubtype(sc_type_connector);
   }
 
   /*!
@@ -87,55 +91,55 @@ export class ScType {
   }
 
   public isCommonEdge(): boolean {
-    return (this._value & sc_type_common_edge) != 0;
+    return this.hasSubtype(sc_type_common_edge);
   }
 
   public isArc(): boolean {
-    return (this._value & sc_type_arc) != 0;
+    return this.hasSubtype(sc_type_arc);
   }
 
   public isCommonArc(): boolean {
-    return (this._value & sc_type_common_arc) != 0;
+    return this.hasSubtype(sc_type_common_arc);
   }
 
   public isMembershipArc(): boolean {
-    return (this._value & sc_type_membership_arc) != 0;
+    return this.hasSubtype(sc_type_membership_arc);
   }
 
   public isPos(): boolean {
-    return (this._value & sc_type_pos_arc) == sc_type_pos_arc;
+    return this.hasSubtype(sc_type_pos_arc);
   }
 
   public isNeg(): boolean {
-    return (this._value & sc_type_neg_arc) == sc_type_neg_arc;
+    return this.hasSubtype(sc_type_neg_arc);
   }
 
   public isFuz(): boolean {
-    return (this._value & sc_type_fuz_arc) == sc_type_fuz_arc;
+    return this.hasSubtype(sc_type_fuz_arc);
   }
 
   public isPerm(): boolean {
-    return (this._value & sc_type_perm_arc) == sc_type_perm_arc;
+    return this.hasSubtype(sc_type_perm_arc);
   }
 
   public isTemp(): boolean {
-    return (this._value & sc_type_temp_arc) == sc_type_temp_arc;
+    return this.hasSubtype(sc_type_temp_arc);
   }
 
   public isActual(): boolean {
-    return (this._value & sc_type_actual_arc) == sc_type_actual_arc;
+    return this.hasSubtype(sc_type_actual_arc);
   }
 
   public isInactual(): boolean {
-    return (this._value & sc_type_inactual_arc) == sc_type_inactual_arc;
+    return this.hasSubtype(sc_type_inactual_arc);
   }
 
   public isTuple(): boolean {
-    return (this._value & sc_type_node_tuple) == sc_type_node_tuple;
+    return this.hasSubtype(sc_type_node_tuple);
   }
   
   public isStructure(): boolean {
-    return (this._value & sc_type_node_structure) == sc_type_node_structure;
+    return this.hasSubtype(sc_type_node_structure);
   }
 
   /*!
@@ -147,23 +151,23 @@ export class ScType {
   }
 
   public isRole(): boolean {
-    return (this._value & sc_type_node_role) == sc_type_node_role;
+    return this.hasSubtype(sc_type_node_role);
   }
 
   public isNoRole(): boolean {
-    return (this._value & sc_type_node_norole) == sc_type_node_norole;
+    return this.hasSubtype(sc_type_node_no_role);
   }
 
   public isClass(): boolean {
-    return (this._value & sc_type_node_class) == sc_type_node_class;
+    return this.hasSubtype(sc_type_node_class);
   }
 
   public isSuperclass(): boolean {
-    return (this._value & sc_type_node_superclass) == sc_type_node_superclass;
+    return this.hasSubtype(sc_type_node_superclass);
   }
 
   public isMaterial(): boolean {
-    return (this._value & sc_type_node_material) == sc_type_node_material;
+    return this.hasSubtype(sc_type_node_material);
   }
 
   public isValid(): boolean {
@@ -180,7 +184,7 @@ export class ScType {
     return subtype != sc_type_unknown && subtype != newSubtype;
   }
 
-  protected isExpendableTo(newType: ScType): boolean { // it is equal to `sc_storage_is_type_expendable_to` in the sc-machine
+  protected isExtendableTo(newType: ScType): boolean { // it is equal to `sc_storage_is_type_extendable_to` in the sc-machine
     let thisValue = this.value;
     let newValue = newType.value;
 
@@ -260,8 +264,8 @@ export class ScType {
   }
 
   public merge(other: ScType): ScType {
-    if (!this.isExpendableTo(other)) {
-      throw "Type `" + this + "` can not be expended to `" + other + "`";
+    if (!this.isExtendableTo(other)) {
+      throw "Type `" + this + "` can not be extended to `" + other + "`";
     }
 
     return new ScType(this._value | other._value);
@@ -321,7 +325,7 @@ export class ScType {
   static readonly PosArc = new ScType(sc_type_pos_arc);
   static readonly NegArc = new ScType(sc_type_neg_arc);
 
-  // fuzzy sc-arc
+  // fuzziness
   static readonly FuzArc = new ScType(sc_type_fuz_arc);
 
   // positive sc-arcs
@@ -372,7 +376,7 @@ export class ScType {
   static readonly NodeTuple = new ScType(sc_type_node_tuple);
   static readonly NodeStructure = new ScType(sc_type_node_structure);
   static readonly NodeRole = new ScType(sc_type_node_role);
-  static readonly NodeNoRole = new ScType(sc_type_node_norole);
+  static readonly NodeNoRole = new ScType(sc_type_node_no_role);
   static readonly NodeClass = new ScType(sc_type_node_class);
   static readonly NodeSuperclass = new ScType(sc_type_node_superclass);
   static readonly NodeMaterial = new ScType(sc_type_node_material);
@@ -382,7 +386,7 @@ export class ScType {
   static readonly ConstNodeTuple = new ScType(sc_type_const | sc_type_node_tuple);
   static readonly ConstNodeStructure = new ScType(sc_type_const | sc_type_node_structure);
   static readonly ConstNodeRole = new ScType(sc_type_const | sc_type_node_role);
-  static readonly ConstNodeNoRole = new ScType(sc_type_const | sc_type_node_norole);
+  static readonly ConstNodeNoRole = new ScType(sc_type_const | sc_type_node_no_role);
   static readonly ConstNodeClass = new ScType(sc_type_const | sc_type_node_class);
   static readonly ConstNodeSuperclass = new ScType(sc_type_const | sc_type_node_superclass);
   static readonly ConstNodeMaterial = new ScType(sc_type_const | sc_type_node_material);
@@ -392,7 +396,7 @@ export class ScType {
   static readonly VarNodeTuple = new ScType(sc_type_var | sc_type_node_tuple);
   static readonly VarNodeStructure = new ScType(sc_type_var | sc_type_node_structure);
   static readonly VarNodeRole = new ScType(sc_type_var | sc_type_node_role);
-  static readonly VarNodeNoRole = new ScType(sc_type_var | sc_type_node_norole);
+  static readonly VarNodeNoRole = new ScType(sc_type_var | sc_type_node_no_role);
   static readonly VarNodeClass = new ScType(sc_type_var | sc_type_node_class);
   static readonly VarNodeSuperclass = new ScType(sc_type_var | sc_type_node_superclass);
   static readonly VarNodeMaterial = new ScType(sc_type_var | sc_type_node_material);
